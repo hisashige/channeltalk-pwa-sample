@@ -1,7 +1,8 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc } from "firebase/firestore";
+import { getFirestore, doc, setDoc } from "firebase/firestore";
 import { getMessaging, getToken } from "firebase/messaging";
 import { getJstISOString } from "../utils/time";
+import * as ChannelService from "@channel.io/channel-web-sdk-loader";
 
 // apiKeyはプロジェクト識別をしているだけなので公開して良いらしい
 const app = initializeApp({
@@ -14,7 +15,6 @@ const app = initializeApp({
 });
 
 export async function requestNotificationPermission() {
-  const firestore = getFirestore(app);
   const messaging = getMessaging(app);
 
   try {
@@ -24,12 +24,6 @@ export async function requestNotificationPermission() {
 
     if (token) {
       console.log(`Notification token: ${token}`);
-      // Add token to Firestore
-      await addDoc(collection(firestore, "notification-channeltalk"), {
-        token: token,
-        userAgent: window.navigator.userAgent,
-        created: getJstISOString(),
-      });
     } else {
       console.log(
         "No registration token available. Request permission to generate one."
@@ -37,5 +31,28 @@ export async function requestNotificationPermission() {
     }
   } catch (error) {
     console.error("An error occurred while retrieving token. ", error);
+  }
+}
+
+export async function setPushNotificationInfo(
+  user: ChannelService.User,
+  token: string
+) {
+  const firestore = getFirestore(app);
+
+  try {
+    // Set token to Firestore
+    const docRef = doc(firestore, "notification-channeltalk", user.id);
+    await setDoc(docRef, {
+      user: user,
+      token: token,
+      userAgent: window.navigator.userAgent,
+      updated: getJstISOString(),
+    });
+  } catch (error) {
+    console.error(
+      "An error occured while adding push notification info to firestore.",
+      error
+    );
   }
 }

@@ -1,7 +1,7 @@
 import { Box, Text, Button } from "@chakra-ui/react";
 import "./App.css";
 import { useNotification } from "./hooks/useNotification";
-import { loadScript, boot } from "./lib/channelTalk";
+import { loadScript, boot, onChatCreated } from "./lib/channelTalk";
 import { useEffect } from "react";
 
 loadScript();
@@ -9,8 +9,15 @@ loadScript();
 function App() {
   const { permission, isRequesting, requestPermission } = useNotification();
 
+  let initialized = false;
   useEffect(() => {
+    if (initialized) return;
     boot();
+    onChatCreated();
+
+    return () => {
+      initialized = true;
+    };
   }, []);
 
   return (
