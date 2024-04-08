@@ -12,9 +12,9 @@ export default defineConfig({
         enabled: true,
       },
       manifest: {
-        name: "Sample App Name",
-        short_name: "Sample App",
-        description: "Sample App Description",
+        name: "ChannelTalk App Name",
+        short_name: "ChannelTalk App",
+        description: "ChannelTalk App Description",
         icons: [
           {
             src: "app_icon/icon-192.png",
