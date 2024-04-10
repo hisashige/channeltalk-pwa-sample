@@ -24,6 +24,7 @@ export async function requestNotificationPermission() {
 
     if (token) {
       console.log(`Notification token: ${token}`);
+      localStorage.setItem("push-token", token);
     } else {
       console.log(
         "No registration token available. Request permission to generate one."
