@@ -9,6 +9,7 @@ export const boot = () => {
   ChannelService.boot(
     {
       pluginKey: import.meta.env.VITE_CHANNELTALK_PLUGINKEY as string,
+      hidePopup: true,
     },
     (error, user) => {
       if (error) {
