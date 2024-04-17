@@ -7,7 +7,10 @@ export class WebhookService {
   constructor(@Inject('FIREBASE') private readonly firebaseAdmin: app.App) {}
 
   async pushNotification(data: any): Promise<void> {
-    if (data?.entity?.personType !== 'manager') {
+    if (
+      data?.entity?.personType !== 'manager' &&
+      data?.entity?.personType !== 'bot'
+    ) {
       return;
     }
 
